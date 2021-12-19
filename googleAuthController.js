@@ -14,9 +14,8 @@ const googleAuthController = (function(){
         const { OAuth2 } = google.auth
 
         // Create a new instance of oAuth and set our Client ID & Client Secret.
-        const oauth2Client = new OAuth2(process.env.GOOGLE_CLIENT_ID,process.env.CLIENT_SECRET,process.env.REDIRECT_URL)
+        return new OAuth2(process.env.GOOGLE_CLIENT_ID,process.env.CLIENT_SECRET,process.env.REDIRECT_URL)
 
-        return oauth2Client
     })()
 
 
