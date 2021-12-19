@@ -1,0 +1,12 @@
+{
+  "name": "google-calendar-nodejs-app",
+  "version": "1.0.0",
+  "description": "Simple example on Google Calendar API using oAuth in NodeJS.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+
+  "author": "Emad Alhamou",
+  "license": "MIT"
+}
