@@ -5,12 +5,16 @@ const { google } = require('googleapis')
 const googleAuthController = require("./googleAuthController")
 
 
+
+/**
+ * root: /singin
+ */
 router.get("", async (req, res)=>{
 
 
     try{
 
-        const response = await googleAuthController.resaveData(req.query)
+        const response = await googleAuthController.provideObjectData(req.query)
 
         res.send({result: "success", response})
         

@@ -126,7 +126,7 @@ const googleAuthController = (function(){
 
     }
 
-    obj.resaveData = async function(data){
+    obj.provideObjectData = async function(data){
 
         console.log(data)
 
