@@ -1,88 +1,27 @@
 require('dotenv').config()
+const express = require("express")
+const app = express()
 
-// Require google from googleapis package.
-const { google } = require('googleapis')
 
-// Require oAuth2 from our google instance.
-const { OAuth2 } = google.auth
 
-// Create a new instance of oAuth and set our Client ID & Client Secret.
-const oAuth2Client = new OAuth2(
-  process.env.GOOGLE_CLIENT_ID,
-  process.env.CLIENT_SECRET
-)
+app.get("/", async (req, res)=>{
 
-// Call the setCredentials method on our oAuth2Client instance and set our refresh token.
-oAuth2Client.setCredentials({
-  refresh_token: process.env.REFRESH_TOKEN,
+  const googleAuthController = require("./googleAuthController")
+
+  const url = await googleAuthController.getUrlAuth()
+ 
+  res.json({result: "Index page success", url})
+  
 })
 
-// Create a new calender instance.
-const calendar = google.calendar({ version: 'v3', auth: oAuth2Client })
-
-// Create a new event start date instance for temp uses in our calendar.
-const eventStartTime = new Date()
-
-eventStartTime.setDate(eventStartTime.getDate() + 1)
-eventStartTime.setMinutes(eventStartTime.getMinutes() + 10)
 
 
-// Create a new event end date instance for temp uses in our calendar.
-const eventEndTime = new Date()
-eventEndTime.setDate(eventStartTime.getDate())
-eventEndTime.setMinutes(eventStartTime.getMinutes() + 30)
-
-// Montag, 20. Dezember⋅9:15 bis 9:45PM
+app.use("/singin", require("./singin"))
 
 
 
-// Create a dummy event for temp uses in our calendar
-const event = {
-  summary: `Meeting with David`,
-  location: `3595 California St, San Francisco, CA 94118`,
-  description: `Meet with David to talk about the new client project and how to integrate the calendar for booking.`,
-  colorId: 2,
-  start: {
-    dateTime: eventStartTime,
-    timeZone: 'Europe/Berlin',
-  },
-  end: {
-    dateTime: eventEndTime,
-    timeZone: 'Europe/Berlin',
-  },
-}
+app.listen(3000, function(){
+  console.log("APP Started on Post 3000")
+})
 
-// Check if we a busy and have an event on our calendar for the same time.
-calendar.freebusy.query(
-  {
-    resource: {
-      timeMin: eventStartTime,
-      timeMax: eventEndTime,
-      timeZone: 'Europe/Berlin',
-      items: [{ id: 'primary' }],
-    },
-  },
-  (err, res) => {
-    // Check for errors in our query and log them if they exist.
-    if (err) return console.error('Free Busy Query Error: ', err)
 
-    // Create an array of all events on our calendar during that time.
-    const eventArr = res.data.calendars.primary.busy
-
-    // Check if event array is empty which means we are not busy
-    if (eventArr.length === 0)
-      // If we are not busy create a new calendar event.
-      return calendar.events.insert(
-        { calendarId: 'primary', resource: event },
-        err => {
-          // Check for errors and log them if they exist.
-          if (err) return console.error('Error Creating Calender Event:', err)
-          // Else log that the event was created.
-          return console.log('Calendar event successfully created.')
-        }
-      )
-
-    // If event array is not empty log that we are busy.
-    return console.log(`Sorry I'm busy...`)
-  }
-)
