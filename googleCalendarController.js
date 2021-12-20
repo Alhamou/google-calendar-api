@@ -1,14 +1,25 @@
 // Require google from googleapis package.
 const { google } = require('googleapis')
+const tz = require("./timeZone.json")
 
 
 const googleCalendarController = (function(){
 
     const obj = {}
     const scopes = ["https://www.googleapis.com/auth/calendar","https://www.googleapis.com/auth/calendar.events"]
+    let timeZone = "Europe/Berlin"
 
 
-    obj.init = (function(){
+    
+    // obj.initTimeZone = (function(){
+    
+    //     const {timezones} = tz.find(data=> data.country_code === "DE")
+
+    //     timeZone = timezones[0]
+
+    // })()
+
+    obj.initOAuth2 = (function(){
 
         // Require oAuth2 from our google instance.
         const { OAuth2 } = google.auth
@@ -26,7 +37,7 @@ const googleCalendarController = (function(){
 
 
             // Create a new calender instance.
-            const calendar = google.calendar({ version: 'v3', auth: obj.init })
+            const calendar = google.calendar({ version: 'v3', auth: obj.initOAuth2 })
 
             // Create a new event start date instance for temp uses in our calendar.
             const eventStartTime = new Date()
@@ -52,11 +63,11 @@ const googleCalendarController = (function(){
             colorId: 2,
             start: {
                 dateTime: eventStartTime,
-                timeZone: 'Europe/Berlin',
+                timeZone: timeZone,
             },
             end: {
                 dateTime: eventEndTime,
-                timeZone: 'Europe/Berlin',
+                timeZone: timeZone,
             },
             }
 
@@ -66,7 +77,7 @@ const googleCalendarController = (function(){
                 resource: {
                 timeMin: eventStartTime,
                 timeMax: eventEndTime,
-                timeZone: 'Europe/Berlin',
+                timeZone: timeZone,
                 items: [{ id: 'primary' }],
                 },
             },
@@ -109,8 +120,8 @@ const googleCalendarController = (function(){
 
             try{
 
-                const url = obj.init.generateAuthUrl({ access_type: 'offline', scope: scopes});
-
+                const url = obj.initOAuth2.generateAuthUrl({ access_type: 'offline', scope: scopes});
+                console.log(timeZone)
                 resolve(url)
 
             } catch(error){
@@ -130,7 +141,7 @@ const googleCalendarController = (function(){
         console.log(data)
 
         try{
-            const {tokens} = await obj.init.getToken(data.code)
+            const {tokens} = await obj.initOAuth2.getToken(data.code)
         
             console.log(tokens)
 
@@ -145,7 +156,7 @@ const googleCalendarController = (function(){
             console.log(tokens)
 
             // Call the setCredentials method on our oauth2Client instance and set our refresh token.
-            obj.init.setCredentials(tokens);
+            obj.initOAuth2.setCredentials(tokens);
     
             return await googleCalendarController.setAppointment()
 

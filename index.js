@@ -3,8 +3,11 @@ const express = require("express")
 const app = express()
 
 
+app.get("/", async (req, res)=>{
 
+  res.json({timeZone: ""})
 
+})
 app.use("/google-calendar", require("./google-calendar"))
 
 
