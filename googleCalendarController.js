@@ -33,79 +33,49 @@ const googleCalendarController = (function(){
     obj.setAppointment = async function(){
 
 
-        return new Promise((resolve, reject)=>{
+        return new Promise(async (resolve, reject)=>{
 
 
             // Create a new calender instance.
             const calendar = google.calendar({ version: 'v3', auth: obj.initOAuth2 })
 
-            // Create a new event start date instance for temp uses in our calendar.
-            const eventStartTime = new Date()
 
-            eventStartTime.setDate(eventStartTime.getDate() + 1)
-            eventStartTime.setMinutes(eventStartTime.getMinutes() + 10)
+            const eventObj = obj.createEvent()
 
+            try{
 
-            // Create a new event end date instance for temp uses in our calendar.
-            const eventEndTime = new Date()
-            eventEndTime.setDate(eventStartTime.getDate())
-            eventEndTime.setMinutes(eventStartTime.getMinutes() + 30)
-
-            // Montag, 20. Dezember⋅9:15 bis 9:45PM
-
-
-
-            // Create a dummy event for temp uses in our calendar
-            const event = {
-            summary: `Node.js Calendar App`,
-            location: `3595 California St, San Francisco, CA 94118`,
-            description: `Meet with David to talk about the new client project and how to integrate the calendar for booking.`,
-            colorId: 2,
-            start: {
-                dateTime: eventStartTime,
-                timeZone: timeZone,
-            },
-            end: {
-                dateTime: eventEndTime,
-                timeZone: timeZone,
-            },
-            }
-
-            // Check if we a busy and have an event on our calendar for the same time.
-            calendar.freebusy.query(
-            {
-                resource: {
-                timeMin: eventStartTime,
-                timeMax: eventEndTime,
-                timeZone: timeZone,
-                items: [{ id: 'primary' }],
-                },
-            },
-            (err, res) => {
-                // Check for errors in our query and log them if they exist.
-                if (err) return console.error('Free Busy Query Error: ', err)
-
-                // Create an array of all events on our calendar during that time.
-                const eventArr = res.data.calendars.primary.busy
+                // Check if we a busy and have an event on our calendar for the same time.
+                const {data} = await calendar.freebusy.query({resource: {
+                                                                timeMin: eventObj.eventStartTime,
+                                                                timeMax: eventObj.eventEndTime,
+                                                                timeZone: timeZone,
+                                                                items: [{ id: 'primary' }]}
+                                                            })
+                                                                
 
                 // Check if event array is empty which means we are not busy
-                if (eventArr.length === 0)
-                // If we are not busy create a new calendar event.
-                return calendar.events.insert({ calendarId: 'primary', resource: event }, (err, event) => {
-                        // Check for errors and log them if they exist.
-                        if (err) {
-                            return reject(err)
-                        }
-                        
-                        // Else log that the event was created.
-                        resolve(event)
-                    }
-                )
+                if ((data.calendars.primary.busy).length === 0){
 
-                // If event array is not empty log that we are busy.
-                reject("Sorry I'm busy...")
+                    // If we are not busy create a new calendar event.
+                    calendar.events.insert({ calendarId: 'primary', resource: eventObj }, (err, event) => {
+
+                        if (err) throw err
+                        
+                        console.log("Send Event, OK 200")
+                        resolve(event)
+                        
+                    })
+                    
+                } else {
+                    
+                    throw "Sorry I'm busy..."
+                }
+
+            }catch(error){
+                console.log(error)
+                reject(error)
             }
-            )
+
 
         })
 
@@ -168,9 +138,69 @@ const googleCalendarController = (function(){
 
     }
 
+    obj.sendTest = async function(){
+
+        try{
+            const authObj = {
+                access_token: 'ya29.a0ARrdaM9A6OZ5fuzib9esgT65Q8LwwzvnkcBPoSjJxzcC3WPvSKroVEFilJpBK0b8VJTROYoj_2CwGzNhlHy6p1HZiZwjAH3OfWCJTOmyXY-dos0cE2-U0XgmmgBjvGbMvBMBylXfWPGcKup1JSONsmZkA3bOGw',
+                scope: 'https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/calendar.events',
+                token_type: 'Bearer',
+                expiry_date: 1639976683462
+            }
+
+            obj.initOAuth2.setCredentials(authObj);
+
+            return await googleCalendarController.setAppointment()
+
+        } catch(error){
+            throw error
+        }
+
+
+    }
+
+    obj.createEvent = function(){
+
+        // Create a new event start date instance for temp uses in our calendar.
+        const eventStartTime = new Date()
+
+        eventStartTime.setDate(eventStartTime.getDate() + 1)
+        eventStartTime.setMinutes(eventStartTime.getMinutes() + 10)
+
+
+        // Create a new event end date instance for temp uses in our calendar.
+        const eventEndTime = new Date()
+        eventEndTime.setDate(eventStartTime.getDate())
+        eventEndTime.setMinutes(eventStartTime.getMinutes() + 30)
+
+        // Montag, 20. Dezember⋅9:15 bis 9:45PM
+
+
+
+        // Create a dummy event for temp uses in our calendar
+        return {
+                    summary: `Node.js Calendar App`,
+                    location: `3595 California St, San Francisco, CA 94118`,
+                    description: `Meet with David to talk about the new client project and how to integrate the calendar for booking.`,
+                    colorId: 2,
+                    start: {
+                        dateTime: eventStartTime,
+                        timeZone: timeZone,
+                    },
+                    end: {
+                        dateTime: eventEndTime,
+                        timeZone: timeZone,
+                    },
+                    eventStartTime,
+                    eventEndTime
+                }
+
+    }
+
 
     return obj
 
 })()
+
 
 module.exports = googleCalendarController;

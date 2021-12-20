@@ -1,0 +1,99 @@
+{
+    "result": "success",
+    "response": {
+        "config": {
+            "url": "https://www.googleapis.com/calendar/v3/calendars/primary/events",
+            "method": "POST",
+            "userAgentDirectives": [
+                {
+                    "product": "google-api-nodejs-client",
+                    "version": "5.0.5",
+                    "comment": "gzip"
+                }
+            ],
+            "data": {
+                "summary": "Node.js Calendar App",
+                "location": "3595 California St, San Francisco, CA 94118",
+                "description": "Meet with David to talk about the new client project and how to integrate the calendar for booking.",
+                "colorId": 2,
+                "start": {
+                    "dateTime": "2021-12-21T03:47:58.580Z",
+                    "timeZone": "Europe/Berlin"
+                },
+                "end": {
+                    "dateTime": "2021-12-21T04:17:58.580Z",
+                    "timeZone": "Europe/Berlin"
+                }
+            },
+            "headers": {
+                "x-goog-api-client": "gdcl/5.0.5 gl-node/16.13.1 auth/7.11.0",
+                "Accept-Encoding": "gzip",
+                "User-Agent": "google-api-nodejs-client/5.0.5 (gzip)",
+                "Authorization": "Bearer ya29.A0ARrdaM_ham1uQPqkEcciHjCeYpECcrIsIcUtlAWQ41ITgAKONx7a9F7Li4W2EMJofi1K_vExf8sczP3A3eXWfnIYRlu8mSrPWPq0Q59X1oDSo8qR-HDjg8h5T2WYf3JNbnlIhWhXYCEgyNAqRsemKrL4TX6qdw",
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            },
+            "params": {},
+            "retry": true,
+            "body": "{\"summary\":\"Node.js Calendar App\",\"location\":\"3595 California St, San Francisco, CA 94118\",\"description\":\"Meet with David to talk about the new client project and how to integrate the calendar for booking.\",\"colorId\":2,\"start\":{\"dateTime\":\"2021-12-21T03:47:58.580Z\",\"timeZone\":\"Europe/Berlin\"},\"end\":{\"dateTime\":\"2021-12-21T04:17:58.580Z\",\"timeZone\":\"Europe/Berlin\"}}",
+            "responseType": "json"
+        },
+        "data": {
+            "kind": "calendar#event",
+            "etag": "\"3279942958170000\"",
+            "id": "lki6g9o2nvth77dv3b4ov0krn0",
+            "status": "confirmed",
+            "htmlLink": "https://www.google.com/calendar/event?eid=bGtpNmc5bzJudnRoNzdkdjNiNG92MGtybjAgZW1hZGFsaGFtb0Bt",
+            "created": "2021-12-20T03:37:59.000Z",
+            "updated": "2021-12-20T03:37:59.085Z",
+            "summary": "Node.js Calendar App",
+            "description": "Meet with David to talk about the new client project and how to integrate the calendar for booking.",
+            "location": "3595 California St, San Francisco, CA 94118",
+            "colorId": "2",
+            "creator": {
+                "email": "emadalhamo@gmail.com",
+                "self": true
+            },
+            "organizer": {
+                "email": "emadalhamo@gmail.com",
+                "self": true
+            },
+            "start": {
+                "dateTime": "2021-12-21T04:47:58+01:00",
+                "timeZone": "Europe/Berlin"
+            },
+            "end": {
+                "dateTime": "2021-12-21T05:17:58+01:00",
+                "timeZone": "Europe/Berlin"
+            },
+            "iCalUID": "lki6g9o2nvth77dv3b4ov0krn0@google.com",
+            "sequence": 0,
+            "reminders": {
+                "useDefault": true
+            },
+            "eventType": "default"
+        },
+        "headers": {
+            "alt-svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"",
+            "cache-control": "no-cache, no-store, max-age=0, must-revalidate",
+            "connection": "close",
+            "content-encoding": "gzip",
+            "content-type": "application/json; charset=UTF-8",
+            "date": "Mon, 20 Dec 2021 03:37:59 GMT",
+            "etag": "\"3279942958170000\"",
+            "expires": "Mon, 01 Jan 1990 00:00:00 GMT",
+            "pragma": "no-cache",
+            "server": "ESF",
+            "transfer-encoding": "chunked",
+            "vary": "Origin, X-Origin, Referer",
+            "x-content-type-options": "nosniff",
+            "x-frame-options": "SAMEORIGIN",
+            "x-xss-protection": "0"
+        },
+        "status": 200,
+        "statusText": "OK",
+        "request": {
+            "responseURL": "https://www.googleapis.com/calendar/v3/calendars/primary/events"
+        }
+    }
+}
