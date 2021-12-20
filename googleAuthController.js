@@ -80,14 +80,14 @@ const googleAuthController = (function(){
                 // Check if event array is empty which means we are not busy
                 if (eventArr.length === 0)
                 // If we are not busy create a new calendar event.
-                return calendar.events.insert({ calendarId: 'primary', resource: event }, err => {
+                return calendar.events.insert({ calendarId: 'primary', resource: event }, (err, event) => {
                         // Check for errors and log them if they exist.
                         if (err) {
                             return reject(err)
                         }
                         
                         // Else log that the event was created.
-                        resolve('Calendar event successfully created.')
+                        resolve(event)
                     }
                 )
 
@@ -132,12 +132,18 @@ const googleAuthController = (function(){
         try{
             const {tokens} = await obj.init.getToken(data.code)
         
+            console.log(tokens)
+
+
             // refresh_token in the response on the first authorisation
             tokens["refresh_token"] = process.env.REFRESH_TOKEN
     
+            // refresh_token in the response on the first authorisation
+            // TODO, delete access token just for testing.
+            delete tokens["access_token"]
+            
             console.log(tokens)
-    
-    
+
             // Call the setCredentials method on our oauth2Client instance and set our refresh token.
             obj.init.setCredentials(tokens);
     

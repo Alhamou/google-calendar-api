@@ -4,19 +4,8 @@ const app = express()
 
 
 
-app.get("/", async (req, res)=>{
 
-  const googleAuthController = require("./googleAuthController")
-
-  const url = await googleAuthController.getUrlAuth()
- 
-  res.json({result: "Index page success", url})
-  
-})
-
-
-
-app.use("/singin", require("./singin"))
+app.use("/google-calendar", require("./google-calendar"))
 
 
 
