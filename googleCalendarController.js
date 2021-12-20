@@ -1,12 +1,12 @@
 // Require google from googleapis package.
 const { google } = require('googleapis')
 
-const scopes = ["https://www.googleapis.com/auth/calendar","https://www.googleapis.com/auth/calendar.events"]
 
-
-const googleAuthController = (function(){
+const googleCalendarController = (function(){
 
     const obj = {}
+    const scopes = ["https://www.googleapis.com/auth/calendar","https://www.googleapis.com/auth/calendar.events"]
+
 
     obj.init = (function(){
 
@@ -147,7 +147,7 @@ const googleAuthController = (function(){
             // Call the setCredentials method on our oauth2Client instance and set our refresh token.
             obj.init.setCredentials(tokens);
     
-            return await googleAuthController.setAppointment()
+            return await googleCalendarController.setAppointment()
 
         } catch(error){
 
@@ -162,4 +162,4 @@ const googleAuthController = (function(){
 
 })()
 
-module.exports = googleAuthController;
+module.exports = googleCalendarController;

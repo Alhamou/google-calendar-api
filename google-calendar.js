@@ -1,8 +1,7 @@
 
 const express = require("express")
 const router = new express.Router()
-const { google } = require('googleapis')
-const googleAuthController = require("./googleAuthController")
+const googleCalendarController = require("./googleCalendarController")
 
 
 /**
@@ -12,7 +11,7 @@ router.get("", async (req, res)=>{
 
     try{
   
-      const url = await googleAuthController.getUrlAuth()
+      const url = await googleCalendarController.getUrlAuth()
    
       res.json({result: "Index page success", url})
   
@@ -32,7 +31,7 @@ router.get("/register", async (req, res)=>{
 
     try{
 
-        const response = await googleAuthController.provideObjectData(req.query)
+        const response = await googleCalendarController.provideObjectData(req.query)
 
         res.send({result: "success", response})
         
