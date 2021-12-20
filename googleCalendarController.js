@@ -33,16 +33,22 @@ const googleCalendarController = (function(){
     obj.setAppointment = async function(){
 
 
+        
+
         return new Promise(async (resolve, reject)=>{
 
 
-            // Create a new calender instance.
-            const calendar = google.calendar({ version: 'v3', auth: obj.initOAuth2 })
-
-
-            const eventObj = obj.createEvent()
-
             try{
+
+                // Create a new calender instance.
+                const calendar = google.calendar({ version: 'v3', auth: obj.initOAuth2 })
+
+
+                // init the event object.
+                const eventObj = obj.createEvent()
+                
+                // refresh the access_token.
+                await obj.refreshAccessToken()
 
                 // Check if we a busy and have an event on our calendar for the same time.
                 const {data} = await calendar.freebusy.query({resource: {
@@ -91,7 +97,7 @@ const googleCalendarController = (function(){
             try{
 
                 const url = obj.initOAuth2.generateAuthUrl({ access_type: 'offline', scope: scopes});
-                console.log(timeZone)
+
                 resolve(url)
 
             } catch(error){
@@ -117,18 +123,18 @@ const googleCalendarController = (function(){
 
 
             // refresh_token in the response on the first authorisation
-            tokens["refresh_token"] = process.env.REFRESH_TOKEN
+            // tokens["refresh_token"] = process.env.REFRESH_TOKEN
     
             // refresh_token in the response on the first authorisation
             // TODO, delete access token just for testing.
-            delete tokens["access_token"]
+            // delete tokens["access_token"]
             
-            console.log(tokens)
+            // console.log(tokens)
 
             // Call the setCredentials method on our oauth2Client instance and set our refresh token.
             obj.initOAuth2.setCredentials(tokens);
     
-            return await googleCalendarController.setAppointment()
+            // return await googleCalendarController.setAppointment()
 
         } catch(error){
 
@@ -138,21 +144,24 @@ const googleCalendarController = (function(){
 
     }
 
-    obj.sendTest = async function(){
+    obj.refreshAccessToken = async function(){
 
         try{
-            const authObj = {
-                access_token: 'ya29.a0ARrdaM9A6OZ5fuzib9esgT65Q8LwwzvnkcBPoSjJxzcC3WPvSKroVEFilJpBK0b8VJTROYoj_2CwGzNhlHy6p1HZiZwjAH3OfWCJTOmyXY-dos0cE2-U0XgmmgBjvGbMvBMBylXfWPGcKup1JSONsmZkA3bOGw',
-                scope: 'https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/calendar.events',
-                token_type: 'Bearer',
-                expiry_date: 1639976683462
-            }
 
-            obj.initOAuth2.setCredentials(authObj);
+            obj.initOAuth2.credentials = {
+                refresh_token: process.env.REFRESH_TOKEN
+            };
 
-            return await googleCalendarController.setAppointment()
+            const access_token = await obj.initOAuth2.getAccessToken()
+
+            // console.log(access_token)
+            obj.initOAuth2.credentials = {access_token : access_token.token}
+
+
+            // return await obj.setAppointment()
 
         } catch(error){
+            console.log(error)
             throw error
         }
 
@@ -165,13 +174,13 @@ const googleCalendarController = (function(){
         const eventStartTime = new Date()
 
         eventStartTime.setDate(eventStartTime.getDate() + 1)
-        eventStartTime.setMinutes(eventStartTime.getMinutes() + 10)
+        eventStartTime.setMinutes(eventStartTime.getMinutes())
 
 
         // Create a new event end date instance for temp uses in our calendar.
         const eventEndTime = new Date()
         eventEndTime.setDate(eventStartTime.getDate())
-        eventEndTime.setMinutes(eventStartTime.getMinutes() + 30)
+        eventEndTime.setMinutes(eventStartTime.getMinutes() + 60)
 
         // Montag, 20. Dezember⋅9:15 bis 9:45PM
 

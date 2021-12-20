@@ -4,10 +4,27 @@ const router = new express.Router()
 const googleCalendarController = require("./googleCalendarController")
 
 
+// root: /
+router.get("/", async (req, res)=>{
+
+    try{
+  
+      const data = await googleCalendarController.setAppointment()
+      
+      res.json({status: data.status, data: data})
+  
+    }catch(error){
+  
+      res.status(400).json({error: error})
+    }
+  
+  })
+
+
 /**
- * root: /
+ * root: /auth
  */
-router.get("", async (req, res)=>{
+router.get("/auth", async (req, res)=>{
 
     try{
   
@@ -26,7 +43,7 @@ router.get("", async (req, res)=>{
 /**
  * root: /singin
  */
-router.get("/register", async (req, res)=>{
+router.get("/callback", async (req, res)=>{
 
 
     try{
